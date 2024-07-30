@@ -1,0 +1,4646 @@
+{
+	"info": {
+		"_postman_id": "80154905-b079-4b5b-9ce4-fcb110f0681a",
+		"name": "FARMEXT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22579592"
+	},
+	"item": [
+		{
+			"name": "FARMEXT",
+			"item": [
+				{
+					"name": "API Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var status = pm.response.code;\r",
+									"var dataCorrect = {\r",
+									"    error: true,\r",
+									"    data: {\r",
+									"        username: 'hieu.le',\r",
+									"        password: '123456',\r",
+									"    }\r",
+									"}\r",
+									"//kiem tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"//kiem tra du lieu tra ve\r",
+									"if(jsonData.error == false){\r",
+									"    //kiem tra status\r",
+									"    pm.test(\"Username or password is true\", () => {\r",
+									"        pm.expect(jsonData.error).to.eql(false);\r",
+									"    });\r",
+									"    //kiem tra token\r",
+									"    pm.test(\"Login is ok\", () => {\r",
+									"        if(jsonData.data.token != null) return true;\r",
+									"        \r",
+									"    });\r",
+									"    //kiem tra username\r",
+									"    pm.test(\"Login-username is OK\", () => {\r",
+									"        pm.expect(pm.request.body.formdata.get(\"username\")).to.eql(dataCorrect.data.username);\r",
+									"    });\r",
+									"    //kiem tra password\r",
+									"    pm.test(\"Login-password is OK\", () => {\r",
+									"        pm.expect(pm.request.body.formdata.get(\"password\")).to.eql(dataCorrect.data.password);\r",
+									"    });\r",
+									"}else{\r",
+									"    \r",
+									"    pm.test(\"Message: \"+ jsonData.message, () => {\r",
+									"        pm.expect(jsonData.error).to.eql(false);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "hieu.le",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/user/login-api",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"login-api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Notification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        notifi: 7,     // Có 7 thông báo\r",
+									"    }\r",
+									"}\r",
+									"//kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"    // Kiểm tra có đủ 18 thông báo hay không\r",
+									"    pm.test(\"List_notification is enough\", () => {\r",
+									"        pm.expect(jsonData.data.user.length).to.eql(dataCorrect.data.notifi);\r",
+									"    });\r",
+									"}else{\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/notification-api?action=list&page=0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"notification-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "list"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        num: 2,\r",
+									"        name: 'hieu.le',\r",
+									"        id: '4691',\r",
+									"    }\r",
+									"    \r",
+									"}\r",
+									"\r",
+									"//kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    //Kiểm tra name\r",
+									"    pm.test(\"Name is true\", () => {\r",
+									"        pm.expect(jsonData.data.user.name).to.eql(dataCorrect.data.name);\r",
+									"    });\r",
+									"\r",
+									"    //Kiểm tra id\r",
+									"    pm.test(\"Id is true\", () => {\r",
+									"        pm.expect(jsonData.data.user.id).to.eql(dataCorrect.data.id);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/notification-api?action=getNumNotify",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"notification-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "getNumNotify"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Update-news and species",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: \"success\",\r",
+									"    data: {\r",
+									"        news: 5,        // Data Có 5 news\r",
+									"        species: 5,     // Data có 5 species\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"//kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"if(jsonData.status == \"success\"){\r",
+									"\r",
+									"    //Kiểm tra có đủ 5 species không\r",
+									"    pm.test(\"List species is enough\", () => {\r",
+									"        pm.expect(jsonData.data.species.length).to.eql(dataCorrect.data.species);\r",
+									"    });\r",
+									"\r",
+									"    //Kiển tra có đủ 5 news không\r",
+									"    pm.test(\"List news is enough\", () => {\r",
+									"        pm.expect(jsonData.data.news.length).to.eql(dataCorrect.data.news);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.error.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(\"success\");\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://tepbac.com//farmext/update-api&action=list&page=0",
+							"protocol": "https",
+							"host": [
+								"tepbac",
+								"com"
+							],
+							"path": [
+								"",
+								"farmext",
+								"update-api&action=list&page=0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API disease",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        disease: 7,     // Data Có 6 diseases\r",
+									"        name: \"Trại 1\", // Tên farm\r",
+									"        id: \"2641\"      // Id farm\r",
+									"        \r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    //Kiểm tra có đủ 6 disease không\r",
+									"    pm.test(\"List disease is enough\", () => {\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.disease);\r",
+									"    });\r",
+									"\r",
+									"    //Kiểm tra id farm\r",
+									"    pm.test(\"Id_farm is true\", () => {\r",
+									"        pm.expect(jsonData.farms.find(el=>el.id === dataCorrect.data.id));\r",
+									"    });\r",
+									"\r",
+									"    //Kiểm tra name farm\r",
+									"    pm.test(\"Name_farm is true\", () => {\r",
+									"        pm.expect(jsonData.farms.find(el=>el.name === dataCorrect.data.name));\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/disease-neighboor-api",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"disease-neighboor-api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Home",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        companys: 1,    // Có 1 companys\r",
+									"        farms: 3,       // Có 3 farms\r",
+									"        ponds: 3,       // Có 4 ponds\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"//Kiểm  tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 3 farm không\r",
+									"    pm.test(\"List_farms is true\", () => {\r",
+									"        pm.expect(jsonData.data.farms.length).to.eql(dataCorrect.data.farms);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra có đủ companys không\r",
+									"    pm.test(\"List_companys is true\", () => {\r",
+									"        pm.expect(jsonData.data.companys.length).to.eql(dataCorrect.data.companys);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra có đủ 4 pond không\r",
+									"    pm.test(\"List_ponds is true\", () => {\r",
+									"        pm.expect(jsonData.data.ponds.length).to.eql(dataCorrect.data.ponds);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/home-api",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"home-api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Weather",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"List_weather_daily is true\", () => {\r",
+									"    pm.expect(jsonData.daily.length).to.eql(8);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_weather_minutely is true\", () => {\r",
+									"    pm.expect(jsonData.minutely.length).to.eql(61);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_weather_hourly is true\", () => {\r",
+									"    pm.expect(jsonData.hourly.length).to.eql(48);\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.openweathermap.org/data/2.5/onecall?lat=10.8066947&lon=106.678193&appid=9d7acdb5a0b7977b5dbd5dddf54c1fb4&lang=vi",
+							"protocol": "https",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"onecall"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "10.8066947"
+								},
+								{
+									"key": "lon",
+									"value": "106.678193"
+								},
+								{
+									"key": "appid",
+									"value": "9d7acdb5a0b7977b5dbd5dddf54c1fb4"
+								},
+								{
+									"key": "lang",
+									"value": "vi"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Register - phone_number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    error: false,\r",
+									"    data: {\r",
+									"        data: \"12345678\"  // data phải có ít nhất 8 số\r",
+									"    }\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra độ dài data\r",
+									"if(pm.request.body.formdata.get(\"data\").length >= 8){\r",
+									"    // Kiểm tra data có nhiều hơn hoặc bằng 8 số\r",
+									"    pm.test(\"Message: \"+ jsonData.message, () => {\r",
+									"        pm.expect(pm.request.body.formdata.get(\"data\").length).to.be.least(8);\r",
+									"    });\r",
+									"}else{\r",
+									"    pm.test(\"Message: \"+ jsonData.message, () => {\r",
+									"        pm.expect(pm.request.body.formdata.get(\"data\").length).to.be.least(8);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "obj",
+									"value": "p",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/user/register-api",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"register-api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Register - account_name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    error: false,\r",
+									"    data: {\r",
+									"        data: \"hieu1\" // data phải có ít nhất 5 chữ cái\r",
+									"    }\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra độ dài data\r",
+									"if(pm.request.body.formdata.get(\"data\").length >= 5){\r",
+									"    // Kiểm tra data có nhiều hơn hoặc bằng 5 chữ cái\r",
+									"    pm.test(\"Message: \"+ jsonData.message, () => {\r",
+									"        pm.expect(pm.request.body.formdata.get(\"data\").length).to.be.least(5);\r",
+									"    });\r",
+									"}else{\r",
+									"    pm.test(\"Message: \"+ jsonData.message, () => {\r",
+									"        pm.expect(pm.request.body.formdata.get(\"data\").length).to.be.least(5);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "hieu1",
+									"type": "text"
+								},
+								{
+									"key": "obj",
+									"value": "u",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/user/register-api",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"register-api"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Register - email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    error: false,\r",
+									"    data: \"thanh@mail.com\"\r",
+									"}\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.error === dataCorrect.error){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    if (!(pm.request.body.formdata.get(\"data\")).includes(\"@\")) {\r",
+									"        pm.test(\"Email must have @\", () => {\r",
+									"            pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"        })\r",
+									"    }else if (!(pm.request.body.formdata.get(\"data\")).includes(\".\")) {\r",
+									"        pm.test(\"Email must have .\", () => {\r",
+									"            pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"    pm.test(\"Message: \"+ jsonData.message, () => {\r",
+									"        pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"    });\r",
+									"\r",
+									"} \r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "data",
+									"value": "thanh@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "obj",
+									"value": "e",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/user/register-api",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"register-api"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FARMEXT-ACCOUNT",
+			"item": [
+				{
+					"name": "API Profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        username: \"hieu.le\",\r",
+									"        email: \"qhieule2309@gmail.com\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra usename\r",
+									"    pm.test(\"Username is true\", () => {\r",
+									"        pm.expect(jsonData.data.username).to.eql(dataCorrect.data.username);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra email\r",
+									"    pm.test(\"Email is true\", () => {\r",
+									"        pm.expect(jsonData.data.email).to.eql(dataCorrect.data.email);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/user/api-account-mobie?action=get",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"api-account-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "get"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Địa chỉ - đơn vị thu mua",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        city: 63,   // Có 63 thành phố\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 63 thành phố không\r",
+									"    pm.test(\"List_data_address is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.city);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/address-api?action=listUnit&id=0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"address-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "listUnit"
+								},
+								{
+									"key": "id",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Account Edit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    // Telephone phải có ít nhất 8 số\r",
+									"    // Birthday phải đúng định dạng YYYY/MM/DD\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    // Kiểm tra telephone phải có ít nhất 8 số\r",
+									"    if(pm.request.body.formdata.get(\"telephone\").length < 8){\r",
+									"        pm.test(\"Telephone must have at least 8 number\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra định dạng birthday \r",
+									"    if(pm.request.body.formdata.get(\"birthday\") != \"YYYY/MM/DD\"){\r",
+									"        pm.test(\"Format of birthday: YYYY/MM/DD\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "first_name",
+									"value": "le",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "hieu",
+									"type": "text"
+								},
+								{
+									"key": "birthday",
+									"value": "08/03/2022",
+									"type": "text"
+								},
+								{
+									"key": "telephone",
+									"value": "12356797",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "f",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/user/api-account-mobie?action=edit",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"api-account-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "edit"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Change Pass",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 0,\r",
+									"    // password và npassword phải có ít nhất 6 số\r",
+									"}\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"    // Kiểm tra password và npassword có ít nhất 6 số\r",
+									"    if(pm.request.body.formdata.get(\"password\").length < 6 && pm.request.body.formdata.get(\"npassword\").length < 6 ){\r",
+									"        pm.test(\"password and npassword must have at least 6 number\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "password",
+									"value": "111111",
+									"type": "text"
+								},
+								{
+									"key": "npassword",
+									"value": "111111",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/user/api-account-mobie?action=changepass",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"user",
+								"api-account-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "changepass"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FARMEXT-FARM",
+			"item": [
+				{
+					"name": "API Info farm 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        id: 3160,       // Company_id\r",
+									"        name: \"Trại 1\",  // Company_name\r",
+									"        address: \"607 Nguyễn Kiệm\",      // Company_address\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra địa chỉ\r",
+									"    pm.test(\"Address is true\", () =>{\r",
+									"        pm.expect(jsonData.data.find(el=>el.address === dataCorrect.data.address));\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra name\r",
+									"    pm.test(\"Name is true\", () =>{\r",
+									"        pm.expect(jsonData.data.find(el=>el.name === dataCorrect.data.name));\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra id\r",
+									"    pm.test(\"Company_id is true\", () =>{\r",
+									"        pm.expect(jsonData.data.find(el=>el.company_id === dataCorrect.data.id));\r",
+									"    });\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/company-dashboard-api-mobie?ccode=62982d8647fab",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"company-dashboard-api-mobie"
+							],
+							"query": [
+								{
+									"key": "ccode",
+									"value": "62982d8647fab"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Farm category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        category: 12,       // Có 12 sản phẩm\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 12 sản phẩm không\r",
+									"    pm.test(\"Company_category is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.category);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/company-category-api?ccode=62982d8647fab&action=getItems",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"company-category-api"
+							],
+							"query": [
+								{
+									"key": "ccode",
+									"value": "62982d8647fab"
+								},
+								{
+									"key": "action",
+									"value": "getItems"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Farm packages",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        packages: 4,        // Có 4 packages\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 4 packages không\r",
+									"    pm.test(\"Company_package is true\", function (){\r",
+									"        pm.expect(jsonData.data.packages.length).to.eql(dataCorrect.data.packages);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/company-packages-api-mobie?action=get-package&cid=3160",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"company-packages-api-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "get-package"
+								},
+								{
+									"key": "cid",
+									"value": "3160"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        history: 25,        // Có 25 lịch sử\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 25 lịch sử không\r",
+									"    pm.test(\"History is enough\", function (){\r",
+									"        pm.expect(jsonData.data.list.length).to.eql(dataCorrect.data.history);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/notification-api?action=list-all&page=0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"notification-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "list-all"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FARMEXT-FINANCE",
+			"item": [
+				{
+					"name": "API List of finance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        finance: 51,        // Có 51 finance\r",
+									"        total_in: '306000000',\r",
+									"        total_out: '60000000'\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 51 finance không\r",
+									"    pm.test(\"List of finance is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.finance);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total_in\r",
+									"    pm.test(\"Total_in is true\", function (){\r",
+									"        pm.expect(jsonData.fund.total_in).to.eql(dataCorrect.data.total_in);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total_out\r",
+									"    pm.test(\"Total_out is true\", function (){\r",
+									"        pm.expect(jsonData.fund.total_out).to.eql(dataCorrect.data.total_out);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/finance-api?fcode=62982d86497c0&action=list&page=1",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"finance-api"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "list"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Report of finance (1/6-8/8)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        total_in: 306200010,\r",
+									"        total_out: 308200010,\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra total_in\r",
+									"    pm.test(\"Total_in is true\", () =>{\r",
+									"        pm.expect(jsonData.data.in.find(el=>el.id === dataCorrect.data.total_in));\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total_out\r",
+									"    pm.test(\"Total_out is true\", () =>{\r",
+									"        pm.expect(jsonData.data.in.find(el=>el.id === dataCorrect.data.total_out));\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/finance-api?fcode=62982d86497c0&action=analyst",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"finance-api"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "analyst"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Finance-customers",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        customer: 2,        // Có 2 customer\r",
+									"        name_cus_1: 33333,  \r",
+									"        name_cus_2: \"test\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra tên customer 1\r",
+									"    pm.test(\"Name_customer_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.find(el=>el.name === dataCorrect.data.name_cus_1));\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra tên customer 2\r",
+									"    pm.test(\"Data_customer_2 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.find(el=>el.name === \"test\"));\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra số lượng customer\r",
+									"    pm.test(\"List_customer is OK\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.customer);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/finance-api?fcode=62982d86497c0&action=getCustomers",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"finance-api"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "getCustomers"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API List Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        category: 58,        // Có 58 category\r",
+									"        \r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 58 category không\r",
+									"    pm.test(\"List of category is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.finance);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/finance-api?fcode=62982d86497c0&action=listCategory",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"finance-api"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "listCategory"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Add finance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    // type là in hoặc out\r",
+									"    data: {\r",
+									"        type_in: \"in\",\r",
+									"        type_out: \"out\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra type \r",
+									"    if(pm.request.body.formdata.get(\"type\") == dataCorrect.data.type_in || pm.request.body.formdata.get(\"type\") == dataCorrect.data.type_out){\r",
+									"        pm.test(\"Type is true\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"    // Kiểm tra amounts và amounts_payed\r",
+									"    if(!isNaN(pm.request.body.formdata.get(\"amounts\"))){\r",
+									"        pm.test(\"Amounts is true\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    \r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "type",
+									"value": "in",
+									"type": "text"
+								},
+								{
+									"key": "typeAdd",
+									"value": "62fb594bb1eee",
+									"type": "text"
+								},
+								{
+									"key": "ponds[]",
+									"value": "62fb594bb1eee",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "aouy",
+									"type": "text"
+								},
+								{
+									"key": "amounts",
+									"value": "123142",
+									"type": "text"
+								},
+								{
+									"key": "amounts_payed",
+									"value": "NaN",
+									"type": "text"
+								},
+								{
+									"key": "today",
+									"value": "1661187600",
+									"type": "text"
+								},
+								{
+									"key": "fcode",
+									"value": "62982d86497c0",
+									"type": "text"
+								},
+								{
+									"key": "accounting_by",
+									"value": "62fb594bb1eee",
+									"type": "text"
+								},
+								{
+									"key": "group_id",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "customer_name",
+									"value": "aqls",
+									"type": "text"
+								},
+								{
+									"key": "content_group",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/finance-api?fcode=62982d86497c0&action=add",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"finance-api"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "add"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FARMEXT-INFORMATION",
+			"item": [
+				{
+					"name": "API Edit info species of farm 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        species: 6,     // Có 6 species\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ species không\r",
+									"    pm.test(\"List_species is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.species);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/farm-create-api?action=get-species",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"farm-create-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "get-species"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Edit info address of farm 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        city: 63,       // Có 63 thành phố\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 63 thành phố không\r",
+									"    pm.test(\"List_data_city is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.city);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.data.city);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.data.city);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/address-api?action=listUnit&id=",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"address-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "listUnit"
+								},
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Edit info address-town of farm 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        town: 11,       // Có 11 town\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 11 town không\r",
+									"    pm.test(\"List_data_town is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.town);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/address-api?action=listUnit&id=1166",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"address-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "listUnit"
+								},
+								{
+									"key": "id",
+									"value": "1166"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Edit info address-district of farm 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data:{\r",
+									"        district: 8,\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra có đủ 8 district không\r",
+									"    pm.test(\"List_data_district is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.district);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/address-api?action=listUnit&id=6",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"address-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "listUnit"
+								},
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FARMEXT-MANAGE",
+			"item": [
+				{
+					"name": "API List of pond",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        pond: 2,        // Có 2 pond\r",
+									"    }\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"    // Kiểm tra có đủ pond không \r",
+									"    pm.test(\"List_pond is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.pond);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/farm-api-mobie?fcode=62982d86497c0&action=get-item-pond",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"farm-api-mobie"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "get-item-pond"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Pond 1 - vu_nuoi",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        seed: 0,\r",
+									"        harvest: 0,\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    // Kiểm tra số lượng seed\r",
+									"    pm.test(\"List_seed_vu-nuoi is true\", function (){\r",
+									"        pm.expect(jsonData.data.seed.length).to.eql(dataCorrect.data.seed);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra số lượng harvest\r",
+									"    pm.test(\"List_harvest_vu-nuoi is true\", function (){\r",
+									"        pm.expect(jsonData.data.harvest.length).to.eql(dataCorrect.data.harvest);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/season-dependency?pcode=62fb594bb1eee",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"season-dependency"
+							],
+							"query": [
+								{
+									"key": "pcode",
+									"value": "62fb594bb1eee"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Newest Diary of pond 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    start_season: true,\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.start_season == dataCorrect.start_season){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.start_season).to.eql(dataCorrect.start_season);\r",
+									"    });\r",
+									"    \r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.start_season).to.eql(dataCorrect.start_season);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/daily-today-api?scode=62fb594bb1eee",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"daily-today-api"
+							],
+							"query": [
+								{
+									"key": "scode",
+									"value": "62fb594bb1eee"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Weather at pond 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"List_current-weather is true\", function (){\r",
+									"    pm.expect(pm.response.json().current.weather.length).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"ID_current-weather is true\", () =>{\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.current.weather.find(el=>el.id === \"501\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_minutely is true\", function (){\r",
+									"    pm.expect(pm.response.json().minutely.length).to.eql(61);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_daily is true\", function (){\r",
+									"    pm.expect(pm.response.json().daily.length).to.eql(8);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_hourly is true\", function (){\r",
+									"    pm.expect(pm.response.json().hourly.length).to.eql(48);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.openweathermap.org/data/2.5/onecall?lat=10.806867599487305&lon=106.678138732910160&appid=9d7acdb5a0b7977b5dbd5dddf54c1fb4&lang=vi",
+							"protocol": "https",
+							"host": [
+								"api",
+								"openweathermap",
+								"org"
+							],
+							"path": [
+								"data",
+								"2.5",
+								"onecall"
+							],
+							"query": [
+								{
+									"key": "lat",
+									"value": "10.806867599487305"
+								},
+								{
+									"key": "lon",
+									"value": "106.678138732910160"
+								},
+								{
+									"key": "appid",
+									"value": "9d7acdb5a0b7977b5dbd5dddf54c1fb4"
+								},
+								{
+									"key": "lang",
+									"value": "vi"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Pond 1 - Daily-cost",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"    \r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/daily-cost?pcode=62fb594bb1eee&action=total",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"daily-cost"
+							],
+							"query": [
+								{
+									"key": "pcode",
+									"value": "62fb594bb1eee"
+								},
+								{
+									"key": "action",
+									"value": "total"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Data of next 30 days in pond 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        Id: \"19503\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// KIểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra id data\r",
+									"    pm.test(\"ID_data is true\", () =>{\r",
+									"        pm.expect(jsonData.data.find(el=>el.id === dataCorrect.data.Id));\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/daily-date-paging-api?scode=62fb594bb1eee&date=2022-08-17&p=0&s=90",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"daily-date-paging-api"
+							],
+							"query": [
+								{
+									"key": "scode",
+									"value": "62fb594bb1eee"
+								},
+								{
+									"key": "date",
+									"value": "2022-08-17"
+								},
+								{
+									"key": "p",
+									"value": "0"
+								},
+								{
+									"key": "s",
+									"value": "90"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API History of vu nuoi - pond 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        history: 1,\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra list history\r",
+									"    pm.test(\"List_history is true\", function (){\r",
+									"        pm.expect(jsonData.data.length).to.eql(dataCorrect.data.history);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/pond-history-api-mobie?action=get-pond-history&pcode=62fb594bb1eee",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"pond-history-api-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "get-pond-history"
+								},
+								{
+									"key": "pcode",
+									"value": "62fb594bb1eee"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Technical report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        season_doing: 20,\r",
+									"        money: \"200051\",\r",
+									"        product: 12,\r",
+									"        warehouse: 339084,\r",
+									"        harvest: 0,\r",
+									"        \r",
+									"    }\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra list season doing\r",
+									"    pm.test(\"List_season_doing is true\", function (){\r",
+									"        pm.expect(pm.response.json().data.estimate.list_season_doing.length).to.eql(dataCorrect.data.season_doing);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total money\r",
+									"    pm.test(\"Total_money is true\", () =>{\r",
+									"        pm.expect(jsonData.data.estimate.total_money).to.eql(dataCorrect.data.money);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total product\r",
+									"    pm.test(\"Total_product is true\", () =>{\r",
+									"        pm.expect(jsonData.data.finance.total_product).to.eql(dataCorrect.data.product);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total warehouse\r",
+									"    pm.test(\"Total_warehouse is true\", () =>{\r",
+									"        pm.expect(jsonData.data.finance.total_warehouse).to.eql(dataCorrect.data.warehouse);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra total harvest\r",
+									"    pm.test(\"Total_harvest is true\", () =>{\r",
+									"        pm.expect(jsonData.data.tech.total_harvest).to.eql(dataCorrect.data.harvest);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/farm-api-report?fcode=62982d86497c0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"farm-api-report"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Create Pond",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    // name không được để trống\r",
+									"    // area phải là số\r",
+									"    // deep phải là số,\r",
+									"    // cost phải là số,\r",
+									"    // expire phải là số,\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"    // Kiểm tra area có phải số không\r",
+									"    if(!isNaN(pm.request.body.formdata.get(\"area\"))){\r",
+									"        pm.test(\"Area is true\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra deep có phải số không\r",
+									"    if(!isNaN(pm.request.body.formdata.get(\"deep\"))){\r",
+									"        pm.test(\"Deep is true\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra cost có phải số không và cost không dược rỗng\r",
+									"    if(!isNaN(pm.request.body.formdata.get(\"cost\"))){\r",
+									"        pm.test(\"Cost is true\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }else if(pm.request.body.formdata.get(\"cost\").length == 0){\r",
+									"        pm.test(\"Cost not be empty\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }else{\r",
+									"        pm.test(\"Cost must be number\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra expire có phải số không\r",
+									"    if(!isNaN(pm.request.body.formdata.get(\"expire\"))){\r",
+									"        pm.test(\"Expire is true\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }else{\r",
+									"        pm.test(\"Expire must be number\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"}else{\r",
+									"    // Kiểm tra name có rỗng không\r",
+									"    if(pm.request.body.formdata.get(\"name\").length == 0){\r",
+									"        pm.test(\"Name is not empty\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra area không phải số và không được rỗng\r",
+									"    if(isNaN(pm.request.body.formdata.get(\"area\"))){\r",
+									"        pm.test(\"Area must be number\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }else if(pm.request.body.formdata.get(\"area\").length == 0){\r",
+									"        pm.test(\"Area is not empty\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra deep không phải số và không được rỗng\r",
+									"    if(isNaN(pm.request.body.formdata.get(\"deep\"))){\r",
+									"        pm.test(\"Deep must be number\" , () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }else if(pm.request.body.formdata.get(\"deep\").length == 0){\r",
+									"        pm.test(\"Deep is not empty\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fid",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "area",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "deep",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "cost",
+									"value": "1234",
+									"type": "text"
+								},
+								{
+									"key": "expire",
+									"value": "11",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/farm-api-mobie?action=add-a-pond&fcode=62982d86497c0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"farm-api-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "add-a-pond"
+								},
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Delete Pond",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 0,\r",
+									"    data: {\r",
+									"        action: \"delete\",\r",
+									"        confirm: \"XOA\"\r",
+									"    }\r",
+									"    // pcode lấy code bên API Create Pond\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"    pm.test(\"Message: \" + jsonData.message, function (){\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}else{\r",
+									"    // Kiểm tra confirm có đúng không\r",
+									"    if(pm.request.body.formdata.get(\"confirm\") != dataCorrect.data.confirm){\r",
+									"        pm.test(\"confirm must be XOA\", () =>{\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        });\r",
+									"    }\r",
+									"    // Kiểm tra pcode không được rỗng\r",
+									"    else if(pm.request.url.query.get(\"pcode\").length == 0){ \r",
+									"        pm.test(\"Pcode is not empty\", () =>{\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        });\r",
+									"    }\r",
+									"    // Kiểm tra pcode có đúng không\r",
+									"    else{\r",
+									"        pm.test(\"Pcode is wrong \", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        });\r",
+									"    }\r",
+									"    pm.test(\"error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "confirm",
+									"value": "XOA",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/pond-setting-api-mobie?action=delete&pcode=63034d101af7d",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"pond-setting-api-mobie"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "delete"
+								},
+								{
+									"key": "pcode",
+									"value": "63034d101af7d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Create Season",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: true,\r",
+									"    // date không được để trống\r",
+									"    // feed_no phải là số\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra date có phải số không\r",
+									"    if(!isNaN(pm.request.body.formdata.get(\"feed_no\"))){\r",
+									"        pm.test(\"feed_no must be number\", () => {\r",
+									"            pm.expect(pm.response.code).to.eql(200);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    //Kiểm tra feed_no có phải số không\r",
+									"    if(isNaN(pm.request.body.formdata.get(\"feed_no\"))){\r",
+									"        pm.test(\"feed_no must be number\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "pid",
+									"value": "thanh",
+									"type": "text"
+								},
+								{
+									"key": "tracking_factor",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "1661151914.591",
+									"type": "text"
+								},
+								{
+									"key": "feed_no",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "procedure",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "species",
+									"value": "3",
+									"type": "text"
+								},
+								{
+									"key": "prepare_cost",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/season-create-api?action=save&pcode=63034d101af7d",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"season-create-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "save"
+								},
+								{
+									"key": "pcode",
+									"value": "63034d101af7d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Cancel Season",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    error: false,\r",
+									"    data: {\r",
+									"        pcode: \"63034d101af7d\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra error\r",
+									"if(jsonData.error == dataCorrect.error){\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"    });\r",
+									"\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    if(pm.request.url.query.get(\"pcode\") != dataCorrect.data.pcode){\r",
+									"        pm.test(\"Pcode is wrong\", () =>{\r",
+									"            pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"        });\r",
+									"    }\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.error).to.eql(dataCorrect.error);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cost",
+									"value": "thanh",
+									"type": "text"
+								},
+								{
+									"key": "note",
+									"value": "thanh",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/season-cancel-api?pcode=63034d101af7d",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"season-cancel-api"
+							],
+							"query": [
+								{
+									"key": "pcode",
+									"value": "63034d101af7d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Add Calendar",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    // Time có định dạng HH:MM\r",
+									"    data: {\r",
+									"        farm_id: \"62982d86497c0\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    // Kiểm tra farm_id\r",
+									"    if(pm.request.body.formdata.get(\"farm_id\") != dataCorrect.data.farm_id){\r",
+									"        pm.test(\"farm_id is wrong\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"    // Kiểm tra định dạng date \r",
+									"    if(pm.request.body.formdata.get(\"date\") != \"YYYY-MM-DD\"){\r",
+									"        pm.test(\"Format of date: YYYY-MM-DD\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "time",
+									"value": "11:30",
+									"type": "text"
+								},
+								{
+									"key": "farm_id",
+									"value": "62982d86497c0",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "Cho ăn 12kg",
+									"type": "text"
+								},
+								{
+									"key": "user_perform",
+									"value": "4691",
+									"type": "text"
+								},
+								{
+									"key": "key_check",
+									"value": "feed",
+									"type": "text"
+								},
+								{
+									"key": "value_check",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "date",
+									"value": "2022-08-23",
+									"type": "text"
+								},
+								{
+									"key": "pond_id",
+									"value": "62fb594bb1eee",
+									"type": "text"
+								},
+								{
+									"key": "reference_id",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/calendar-api?action=add",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"calendar-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "add"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FARMEXT-WAREHOUSE",
+			"item": [
+				{
+					"name": "API List of warehouse",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        totalcost: \"-2556620856\",\r",
+									"        totalstore: \"5\",\r",
+									"        totalitem: \"14\",\r",
+									"        list_warehouse: 5,\r",
+									"    }\r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"    pm.test(\"List_warehouse is true\", function (){\r",
+									"        pm.expect(jsonData.data.list.length).to.eql(dataCorrect.data.list_warehouse);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Total_cost is true\", () =>{\r",
+									"        pm.expect(jsonData.data.common.totalCost).to.eql(dataCorrect.data.totalcost);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Total_store is true\", () =>{\r",
+									"        pm.expect(jsonData.data.common.totalStore).to.eql(dataCorrect.data.totalstore);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Total_Item is true\", () =>{\r",
+									"        pm.expect(jsonData.data.common.totalItem).to.eql(dataCorrect.data.totalitem);\r",
+									"    });\r",
+									"}else{\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/farm-api-mobie?fcode=62982d86497c0&action=list-store",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"farm-api-mobie"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "list-store"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Data of warehouse 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        list_product: 12,\r",
+									"        id: \"474\",\r",
+									"        name: \"1\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra list product\r",
+									"    pm.test(\"List_product is true\", function (){\r",
+									"        pm.expect(jsonData.data.list.length).to.eql(dataCorrect.data.list_product);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra id\r",
+									"    pm.test(\"ID_warehouse_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.infor.id).to.eql(dataCorrect.data.id);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra name\r",
+									"    pm.test(\"Name_warehouse_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.infor.name).to.eql(dataCorrect.data.name);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/warehouse-api?wcode=62e8ec448e85a&action=get",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"warehouse-api"
+							],
+							"query": [
+								{
+									"key": "wcode",
+									"value": "62e8ec448e85a"
+								},
+								{
+									"key": "action",
+									"value": "get"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Data of warehouse 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        list_product: 12,\r",
+									"        id: \"477\",\r",
+									"        name: \"2\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra list product\r",
+									"    pm.test(\"List_product is true\", function (){\r",
+									"        pm.expect(jsonData.data.list.length).to.eql(dataCorrect.data.list_product);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra id\r",
+									"    pm.test(\"ID_warehouse_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.infor.id).to.eql(dataCorrect.data.id);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra name\r",
+									"    pm.test(\"Name_warehouse_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.infor.name).to.eql(dataCorrect.data.name);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/warehouse-api?wcode=62e8ecbdb01ac&action=get",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"warehouse-api"
+							],
+							"query": [
+								{
+									"key": "wcode",
+									"value": "62e8ecbdb01ac"
+								},
+								{
+									"key": "action",
+									"value": "get"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Data of warehouse 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        list_product: 12,\r",
+									"        id: \"478\",\r",
+									"        name: \"3\",\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra list product\r",
+									"    pm.test(\"List_product is true\", function (){\r",
+									"        pm.expect(jsonData.data.list.length).to.eql(dataCorrect.data.list_product);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra id\r",
+									"    pm.test(\"ID_warehouse_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.infor.id).to.eql(dataCorrect.data.id);\r",
+									"    });\r",
+									"\r",
+									"    // Kiểm tra name\r",
+									"    pm.test(\"Name_warehouse_1 is true\", () =>{\r",
+									"        pm.expect(jsonData.data.infor.name).to.eql(dataCorrect.data.name);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/warehouse-api?wcode=62e8eeb21b5c0&action=get",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"warehouse-api"
+							],
+							"query": [
+								{
+									"key": "wcode",
+									"value": "62e8eeb21b5c0"
+								},
+								{
+									"key": "action",
+									"value": "get"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Warehouse report",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"if(jsonData.status == 1){\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(1);\r",
+									"    });\r",
+									"}else{\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(1);\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(1);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_cost is true\", function (){\r",
+									"    pm.expect(jsonData.data.costPerDay.length).to.eql(3);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Total_cost_1/8 is true\", () => {\r",
+									"    if(jsonData.data.costPerDay.total === \"45654\" && jsonData.data.costPerDay.date === \"2022-08-01\"){\r",
+									"        return true;\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/store-api-mobie?fcode=62982d86497c0&action=analyze",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"store-api-mobie"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "analyze"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API warehouse history",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"if(jsonData.status == 1){\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(1);\r",
+									"    });\r",
+									"}else{\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(1);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"List_history_warehouse is true\", () => {\r",
+									"    pm.expect(jsonData.data.list.length).to.eql(25)\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Numrows is true\", () => {\r",
+									"    pm.expect(jsonData.data.numRows).to.eql(\"264\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://farmext.com/version3/manager/warehouse-daily-api?action=list&fcode=62982d86497c0&page=0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"warehouse-daily-api"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "list"
+								},
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Create Warehouse",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    // name không được để trống\r",
+									"    // area không được để trống    \r",
+									"}\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Access permission\", () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}else{\r",
+									"    // Kiểm tra name có rỗng không\r",
+									"    if(pm.request.body.formdata.get(\"name\").length == 0){\r",
+									"        pm.test(\"Name is not empty\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    // Kiểm tra name có rỗng không\r",
+									"    if(pm.request.body.formdata.get(\"area\").length == 0){\r",
+									"        pm.test(\"Area is not empty\", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        })\r",
+									"    }\r",
+									"    pm.test(\"Error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"    pm.test(\"Message: \" + jsonData.message, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "123456789",
+									"type": "text"
+								},
+								{
+									"key": "area",
+									"value": "thanh123456789",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/store-api-mobie?fcode=62982d86497c0&action=add",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"store-api-mobie"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "add"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Remove Warehouse",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"var dataCorrect = {\r",
+									"    status: 1,\r",
+									"    data: {\r",
+									"        confirm: \"XOA\"\r",
+									"    }\r",
+									"    // wcode lấy wcode của warehouse muốn xóa\r",
+									"}\r",
+									"\r",
+									"\r",
+									"// kiểm tra request\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"    pm.expect(pm.response.code).to.eql(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Kiểm tra status\r",
+									"if(jsonData.status == dataCorrect.status){\r",
+									"\r",
+									"    pm.test(\"Message: \" + jsonData.message, function (){\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}else{\r",
+									"\r",
+									"    // Kiểm tra confirm có đúng không\r",
+									"    if(pm.request.body.formdata.get(\"confirm\") != dataCorrect.data.confirm){\r",
+									"        pm.test(\"confirm must be XOA\", () =>{\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        });\r",
+									"    }\r",
+									"    \r",
+									"    // Kiểm tra pcode không được rỗng\r",
+									"    else if(pm.request.url.query.get(\"wcode\").length == 0){ \r",
+									"        pm.test(\"Wcode is not empty\", () =>{\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        });\r",
+									"    }\r",
+									"    // Kiểm tra wcode có đúng không\r",
+									"    else{\r",
+									"        pm.test(\"Wcode is wrong \", () => {\r",
+									"            pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"        });\r",
+									"    }\r",
+									"\r",
+									"    pm.test(\"error: \" + jsonData.error, () => {\r",
+									"        pm.expect(jsonData.status).to.eql(dataCorrect.status);\r",
+									"    });\r",
+									"\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "confirm",
+									"value": "XOA",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://farmext.com/version3/manager/store-api-mobie?fcode=62982d86497c0&action=remove&wcode=63035b250b1d0",
+							"protocol": "https",
+							"host": [
+								"farmext",
+								"com"
+							],
+							"path": [
+								"version3",
+								"manager",
+								"store-api-mobie"
+							],
+							"query": [
+								{
+									"key": "fcode",
+									"value": "62982d86497c0"
+								},
+								{
+									"key": "action",
+									"value": "remove"
+								},
+								{
+									"key": "wcode",
+									"value": "63035b250b1d0"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "<Basic Auth Username>",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "<Basic Auth Password>",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "localhost:3000",
+			"type": "string"
+		}
+	]
+}
